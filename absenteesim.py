@@ -3,6 +3,8 @@ import tensorflow as tf
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
 
 # Data Pre-processing
 # *************************************************************************************************************
@@ -106,3 +108,26 @@ scaled_inputs = absenteeism_scaler.transform(unscaled_inputs)
 # *****************************************************************************************
 x_train, x_test, y_train, y_test = train_test_split(scaled_inputs, targets, train_size=0.8, random_state=20)
 # print(len(train_test_split(scaled_inputs, targets)[2]))
+
+# Training the model
+# *****************************************************************************************
+reg = LogisticRegression()
+reg.fit(x_train, y_train)
+# print(reg.score(x_train, y_train))
+
+# Manually check the accuracy
+# *****************************************************************************************
+# model_outputs = reg.predict(x_train)
+# print(np.sum(model_outputs == y_train) / model_outputs.shape[0])
+
+# Finding the intercept and coefficient
+feature_names = unscaled_inputs.columns.values
+# print(feature_names)
+# print(reg.coef_[0])
+summary_tables = pd.DataFrame(columns=['Feature Names'], data=feature_names)
+summary_tables['Coefficient'] = reg.coef_[0]
+summary_tables['Odds_ratio'] = np.exp(summary_tables.Coefficient)
+
+# print(summary_tables.sort_values(by=['Odds_ratio'], ascending=False))
+
+
