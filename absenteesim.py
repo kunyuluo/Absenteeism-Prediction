@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from CustomScaler import CustomScaler
 from sklearn import metrics
 
 # Data Pre-processing
@@ -100,9 +101,12 @@ unscaled_inputs = data_with_targets.iloc[:, :-1]
 # Standardize the data
 # *****************************************************************************************
 absenteeism_scaler = StandardScaler()
+# columns_to_scale = ['Month Value', 'Day of the Week', 'Transportation Expense', 'Distance to Work', 'Age',
+#                     'Daily Work Load Average', 'Body Mass Index' 'Education' 'Children' 'Pets']
+# absenteeism_scaler = CustomScaler(columns_to_scale)
 absenteeism_scaler.fit(unscaled_inputs)
 scaled_inputs = absenteeism_scaler.transform(unscaled_inputs)
-# print(scaled_inputs.shape)
+# print(scaled_inputs)
 
 # Split data into training and testing
 # *****************************************************************************************
@@ -129,5 +133,11 @@ summary_tables['Coefficient'] = reg.coef_[0]
 summary_tables['Odds_ratio'] = np.exp(summary_tables.Coefficient)
 
 # print(summary_tables.sort_values(by=['Odds_ratio'], ascending=False))
+
+# Tesing the model
+# *****************************************************************************************
+print(reg.score(x_test, y_test))
+predicted_proba = reg.predict_proba(x_test)
+print(predicted_proba)
 
 
